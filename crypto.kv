@@ -1,0 +1,194 @@
+#: import ListItemButton kivy.uix.listview.ListItemButton
+#: import ListAdapter   kivy.adapters.listadapter.ListAdapter
+#:set OpenSansNormal "./Fonts/OpenSans-Regular"
+#: import main MainUi
+#:set OpenSansBold "./Fonts/OpenSans-Bold"
+#:set OpenSansItalic "./Fonts/OpenSans-Italic"
+BoxLayout:
+    padding:"15dp"
+    canvas.before:
+        Rectangle:
+            size:self.size
+            pos:self.pos
+        Color:
+            rgb:[0.9,0.9,0.9]
+
+    Dashboard:
+        padding:"15dp"
+
+        canvas.before:
+            Rectangle:
+                size:self.size
+                pos:self.pos
+            Color:
+                rgb:[1,1,1]
+
+<Widget>:
+    font_name:OpenSansNormal
+    font_hinting:"light"
+    color:(0.5,0.5,0.5,1)
+<TextInput>
+    background_normal:"white"
+
+<Button>:
+    background_normal:"white"
+
+
+<Dashboard>:
+    orientation:"vertical"
+    Label:
+        text:"Voting Booth"
+        font_name:OpenSansBold
+        font_size:"30dp"
+        size_hint_y:"0.25"
+    Label:
+        text:""
+        size_hint_y:"0.50"
+
+    BoxLayout:
+        size_hint_y:"0.25"
+        orientation:"horizontal"
+        Label:
+            size_hint_x:"0.75"
+        Button:
+            size_hint_x:"0.25"
+            size_hint_y:None
+            height:"40dp"
+            padding:(5,5)
+            text:"Add Vote"
+            on_press:root.Show_Add_Vote()
+
+<AddVote>:
+    orientation:"vertical"
+    description_output:description_output
+    adhar_no:adhar_no
+    candidatelist:candidate_list
+    btnaddvote:btnaddvote
+    BoxLayout:
+        size_hint_y:"0.25"
+        Label:
+            text:"Add Vote"
+            font_name:OpenSansBold
+            font_size:"32dp"
+            halign:"left"
+    BoxLayout:
+        orientation:"vertical"
+        padding:"0dp"
+        valign:"top"
+        spacing:"10dp"
+
+        BoxLayout:
+            height:"40dp"
+            size_hint_y:None
+            Label:
+                text:"Adhar No :"
+                height:"30dp"
+                size_hint_y:None
+                halign:"left"
+            TextInput:
+                id:adhar_no
+                on_text:root.CheckAuthentication()
+                text:""
+                height:"30dp"
+                multiline:False
+                size_hint_y:None
+                halign:"left"
+
+        BoxLayout:
+
+            height:"40dp"
+            size_hint_y:None
+
+            Label:
+                text:"Fingure Printdata"
+                height:"30dp"
+                size_hint_y:None
+                halign:"left"
+            TextInput:
+                height:"30dp"
+                multiline:False
+                readonly:True
+                size_hint_y:None
+                halign:"left"
+        BoxLayout:
+            height:"40dp"
+            size_hint_y:None
+            orientation:"horizontal"
+            Label:
+                id:description_output
+                size_hint_x:"0.75"
+            Button:
+                size_hint_x:None
+                text:"Add"
+                size_hint_y:None
+                height:"35dp"
+                halign:"right"
+                on_press:root.CheckAuthentication()
+        BoxLayout:
+            height:"40dp"
+            size_hint_y:None
+            Label:
+                size_hint_x:"0.75"
+            Button:
+                id:btnaddvote
+                height:"30dp"
+                width:"150dp"
+                disabled:True
+                text:"Show Candidates"
+                size_hint_y:None
+                size_hint_x:None
+                on_press:root.ShowCandidates()
+
+        BoxLayout:
+            orientation:"vertical"
+            ListView:
+                id:candidate_list
+
+                background_normal:"white"
+                item_strings:["Click on Show Candidates","To Get List"]
+                adapter:
+                    ListAdapter(data=[],cls=main.CandidateOption,args_converter=root.args_converter)
+            Button:
+                size_hint_y:None
+                size_hint_x:None
+                width:"100dp"
+                height:"30dp"
+                halign:"right"
+                text:"Vote"
+                disabled:True
+
+    BoxLayout:
+        size_hint_y:"0.25"
+        Button:
+            text:"Back"
+            size_hint_y:None
+            height:"40dp"
+            size_hint_x:None
+            width:"100dp"
+            on_press:root.Show_Dashboard()
+<CandidateOption>:
+    spacing:"10dp"
+    size_hint_y:None
+    height:"50dp"
+    border:10
+    canvas.before:
+        Rectangle:
+            size:self.size
+            pos:self.pos
+        Color:
+            rgb:[1,1,1]
+    orientation:"horizontal"
+    height:"30dp"
+    spacing:"5dp"
+    ListItemButton:
+        active:root.is_selected
+        deselected_color:[1,1,0,1]
+        selected_color:[0,1,1,1]
+        size_hint_x:None
+        width:"15dp"
+    Label:
+        text:"{}".format(root.candidate[0])
+    Label:
+        text:"{}".format(root.candidate[1])
+    Label:
+        text:"{}".format(root.candidate[2])
