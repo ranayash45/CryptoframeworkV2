@@ -10,7 +10,7 @@ from kivy.uix.listview import ListItemButton
 from kivy.uix.modalview import ModalView
 from kivy.uix.selectableview import SelectableView
 
-from ApiCalls.Model import Candidate
+from ApiCalls.Model import Candidate, Voter
 from CryptoFramework.Authentication import Authentication
 from CryptoFramework.ShortPailler import PaillerCryptoSystem
 
@@ -40,14 +40,20 @@ class AddVote(BoxLayout):
                 'is_selected':False
                 }
 
+    def __init__(self,**kwargs):
+        super(AddVote, self).__init__(**kwargs)
+        self.L = LoadingScreen()
+
     def Show_Dashboard(self):
         self.clear_widgets()
         self.add_widget(Dashboard())
 
-    def CheckAuthentication(self):
-        A = Authentication()
-        Data =  A.CheckUser(self.adhar_no.text,None)
+    def SuccessAuthentication(self,response,result: dict):
+        if 'error' in result:
+            self.L.Image.source = "./Images/error.gif"
+            return
 
+        Data = result
         if Data != None:
             self.description_output.text = Data[2]
             self.btnaddvote.disabled = False
@@ -57,6 +63,14 @@ class AddVote(BoxLayout):
             self.candidatelist.adapter.data.extend([])
             self.candidatelist._trigger_reset_populate()
             self.btnaddvote.disabled = True
+        self.L.dismiss()
+    def FailAuthentication(self):
+        self.L.dismiss()
+    def CheckAuthentication(self):
+        V = Voter.Voter()
+        V.CheckAuthentication(self.adhar_no.text,None,success=self.SuccessAuthentication,fail=self.FailAuthentication)
+        self.L.Image.source = "./Images/loading.gif"
+        self.L.open()
 
     def onsuccess(self,request,result):
         data = result['candidates']
@@ -75,7 +89,6 @@ class AddVote(BoxLayout):
 
     def ShowCandidates(self):
         C = Candidate.Candidate()
-        self.L = LoadingScreen()
         C.GetList(self.onsuccess,self.failing)
         self.L.Image.source = "./Images/loading.gif"
         self.L.open()
