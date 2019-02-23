@@ -1,6 +1,6 @@
 import sqlite3
 
-from CryptoUi.CryptoFramework.DBRecords import DBRecords
+from CryptoFramework.DBRecords import DBRecords
 
 
 class Authentication(object):
