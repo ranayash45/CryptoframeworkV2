@@ -8,7 +8,7 @@ from kivy.uix.modalview import ModalView
 from kivy.uix.selectableview import SelectableView
 
 from ApiCalls.Model import Candidate, Voter
-from BottleServer.ShortPailler import PaillerCryptoSystem
+from CryptoFramework.ShortPailler import PaillerCryptoSystem
 
 P = PaillerCryptoSystem()
 
