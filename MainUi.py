@@ -1,18 +1,14 @@
-import time
-from _thread import start_new_thread
+import hashlib
+import hmac
 from kivy.app import App
-from kivy.network.urlrequest import UrlRequest
 from kivy.properties import ObjectProperty, ListProperty
 from kivy.uix.boxlayout import BoxLayout
-from kivy.uix.checkbox import CheckBox
-from kivy.uix.image import Image, AsyncImage
-from kivy.uix.listview import ListItemButton
+from kivy.uix.image import Image
 from kivy.uix.modalview import ModalView
 from kivy.uix.selectableview import SelectableView
 
 from ApiCalls.Model import Candidate, Voter
-from CryptoFramework.Authentication import Authentication
-from CryptoFramework.ShortPailler import PaillerCryptoSystem
+from BottleServer.ShortPailler import PaillerCryptoSystem
 
 P = PaillerCryptoSystem()
 
@@ -74,7 +70,7 @@ class AddVote(BoxLayout):
 
     def onsuccess(self,request,result):
         data = result['candidates']
-
+        self.data = data
         self.candidatelist.adapter.data.clear()
         self.candidatelist.adapter.data.extend(data)
         self.candidatelist.adapter.bind(on_selection_change=self.PartyChange)
@@ -100,15 +96,25 @@ class AddVote(BoxLayout):
             self.selectedid = -1
             self.btngivevote.disabled = True
 
-    def GiveVote(self):
-        self.clear_widgets()
-        self.LoadingImage = Image()
-        self.LoadingImage.source = "./Images/loading3.gif"
-        self.LoadingImage.anim_delay = 0.025
-        self.LoadingImage.keep_data = True
-        self.LoadingImage.mipmap = True
+    def VoteSuccess(self,request,result):
 
-        self.add_widget(self.LoadingImage)
+        self.L.dismiss()
+    def VoteFail(self,request,result):
+        self.L.dismiss()
+
+    def GiveVote(self):
+        item_id = bytes(str(self.data[self.selectedid][0]),'utf-8')
+        item_password = bytes(str(5675),'utf-8')
+        print(item_id)
+        my_hmac = hmac.new(item_id,item_password,hashlib.md5)
+        my_digest = str(my_hmac.digest())
+        V = Voter.Voter()
+        self.L.Image.source = "./Images/loading2.gif"
+        self.L.open()
+        my_hmac = str(my_hmac)
+        my_digest = str(my_digest)
+        tmp_item_id = self.data[self.selectedid]
+        V.GiveVote(item_id,my_hmac,my_digest,self.VoteSuccess,self.VoteFail)
 
 
 class LoadingScreen(ModalView):

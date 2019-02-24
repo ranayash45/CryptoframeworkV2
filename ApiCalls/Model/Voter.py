@@ -1,3 +1,5 @@
+import json
+
 from ApiCalls.Api import Api
 
 
@@ -7,4 +9,10 @@ class Voter(object):
         self.api = Api()
     def CheckAuthentication(self,adharcard,fingureprint=None,success=None,fail=None,error=None):
         self.data = {"adharcardno":adharcard, "fingureprintdata":fingureprint}
+        self.data = json.dumps(self.data)
         self.api.apiCallWithData(self.apiName+'/authenticate',self.data,success,fail,error)
+
+    def GiveVote(self,votedata,auth_data,digest_value,success=None,fail=None,error=None):
+        self.data = {"vote":votedata,"auth_data":auth_data,"digest_value":digest_value}
+        self.data = json.dumps(self.data)
+        self.api.apiCallWithData(self.apiName+'/givevote',self.data,success,fail,error)

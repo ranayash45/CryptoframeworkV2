@@ -16,8 +16,7 @@ class Api(object):
 
     def apiCallWithData(self,apiString,data:dict,successfunction,errorfunction,failfunction):
         apiUrl = self.url + apiString
-        params = urlencode(data)
+        params = data
         #headers = {'Content-Type':'application/json'}
-        headers = {'Content-type': 'application/json',
-                   'Accept': 'text/plain'}
+        headers = {'Content-type': 'application/json'}
         req = UrlRequest(apiUrl,on_success=successfunction,on_error=errorfunction,on_failure=failfunction,req_body=params,req_headers=headers,)
