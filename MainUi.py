@@ -1,5 +1,7 @@
 import hashlib
 import hmac
+import json
+
 from kivy.app import App
 from kivy.properties import ObjectProperty, ListProperty
 from kivy.uix.boxlayout import BoxLayout
@@ -8,12 +10,30 @@ from kivy.uix.modalview import ModalView
 from kivy.uix.selectableview import SelectableView
 
 from ApiCalls.Model import Candidate, Voter
+from ApiCalls.Model.PublicKey import PublicKey
 from CryptoFramework.ShortPailler import PaillerCryptoSystem
 
-P = PaillerCryptoSystem()
 
+
+PObj = PaillerCryptoSystem(Generation=False)
 
 class Dashboard(BoxLayout):
+
+    def successFunction(self,request,result):
+        data = json.loads(result)
+        PObj.G = data["G"]
+        PObj.N = data["N"]
+
+    def failFunction(self):
+        print("Faield To Fetch Key")
+
+    def __init__(self,**kwargs):
+        super(Dashboard, self).__init__(**kwargs)
+        P = PublicKey()
+        P.GetKey(self.successFunction,self.failFunction)
+
+
+
     def Show_Add_Vote(self):
         self.clear_widgets()
         self.add_widget(AddVote())
@@ -50,7 +70,8 @@ class AddVote(BoxLayout):
             return
 
         Data = result
-        if Data != None:
+        self.identity = Data
+        if (len(Data) > 0) and (Data != None):
             self.description_output.text = Data[2]
             self.btnaddvote.disabled = False
         else:
@@ -103,18 +124,31 @@ class AddVote(BoxLayout):
         self.L.dismiss()
 
     def GiveVote(self):
-        item_id = bytes(str(self.data[self.selectedid][0]),'utf-8')
+        global PObj
+        item_id = []
+        for key in range(0,len(self.data)):
+            value = 0
+            if self.data[key][0] == self.selectedid :
+                value = PObj.Encryption(1)
+            else:
+                value = PObj.Encryption(0)
+            item_id.append(value)
+
         item_password = bytes(str(5675),'utf-8')
-        print(item_id)
-        my_hmac = hmac.new(item_id,item_password,hashlib.md5)
-        my_digest = str(my_hmac.digest())
+        tmp_item_id = bytes(str(item_id).encode('utf-8'))
+        print(tmp_item_id)
+
+
+        my_hmac = hmac.new(tmp_item_id,item_password,hashlib.md5)
+        my_digest = my_hmac.hexdigest()
+        print(type(my_digest))
+
+
         V = Voter.Voter()
         self.L.Image.source = "./Images/loading2.gif"
         self.L.open()
-        my_hmac = str(my_hmac)
-        my_digest = str(my_digest)
-        tmp_item_id = self.data[self.selectedid]
-        V.GiveVote(item_id,my_hmac,my_digest,self.VoteSuccess,self.VoteFail)
+
+        V.GiveVote(item_id,self.identity[0],item_id,my_digest,self.VoteSuccess,self.VoteFail)
 
 
 class LoadingScreen(ModalView):

@@ -9,12 +9,12 @@ class Api(object):
     def __init__(self):
         self.url = "http://localhost"
 
-    def apiCallWithResult(self,apiString,successfunction,errorfunction,failfunction):
+    def apiCallWithResult(self,apiString,successfunction,errorfunction,failfunction=None):
         apiUrl = self.url + apiString
 
         req = UrlRequest(apiUrl,on_success=successfunction,on_error=errorfunction,on_failure=failfunction)
 
-    def apiCallWithData(self,apiString,data:dict,successfunction,errorfunction,failfunction):
+    def apiCallWithData(self,apiString,data:dict,successfunction,errorfunction,failfunction=None):
         apiUrl = self.url + apiString
         params = data
         #headers = {'Content-Type':'application/json'}

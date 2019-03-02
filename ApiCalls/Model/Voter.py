@@ -12,7 +12,7 @@ class Voter(object):
         self.data = json.dumps(self.data)
         self.api.apiCallWithData(self.apiName+'/authenticate',self.data,success,fail,error)
 
-    def GiveVote(self,votedata,auth_data,digest_value,success=None,fail=None,error=None):
-        self.data = {"vote":votedata,"auth_data":auth_data,"digest_value":digest_value}
+    def GiveVote(self,votedata,voterid,auth_data,digest_value,success=None,fail=None,error=None):
+        self.data = {"vote":votedata,"voterid":voterid,"auth_data":auth_data,"digest_value":digest_value}
         self.data = json.dumps(self.data)
         self.api.apiCallWithData(self.apiName+'/givevote',self.data,success,fail,error)

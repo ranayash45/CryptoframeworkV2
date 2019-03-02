@@ -1,33 +1,34 @@
 import math
 import random
 class PaillerCryptoSystem(object):
-    def __init__(self):
-        gcdValue = 0;
-        while gcdValue != 1:
-            self.P = random.randint(1,500)
-            while self.CheckPrime(self.P) == False:
+    def __init__(self,Generation=True):
+        if Generation == True:
+            gcdValue = 0;
+            while gcdValue != 1:
                 self.P = random.randint(1,500)
-            
+                while self.CheckPrime(self.P) == False:
+                    self.P = random.randint(1,500)
 
-            print("P Value is : ",self.P)
-            
-            self.Q = random.randint(1,500)
-            while self.CheckPrime(self.Q) == False or self.P == self.Q:
+
+                print("P Value is : ",self.P)
+
                 self.Q = random.randint(1,500)
-            print("Q value is : ",self.Q)
-            gcdValue = math.gcd(self.P,self.Q)
-        print("All Condition Satisfied")
-        self.N = self.P * self.Q
-        self.Lambda = (self.P-1)*(self.Q-1)
-        print(" N Value : ",self.N)
-        print(" Lambda Value : ",self.Lambda)
-        Ans = 1
-        while Ans == 1:
-            self.G = random.randint(self.N,self.N**2)
-            print(" Generator G : ",self.G)
-            Ans = self.modInverse(self.LFunction((self.G**self.Lambda)%(self.N**2)),self.N)
-        self.U = Ans
-        print(" U Value : ",self.U)
+                while self.CheckPrime(self.Q) == False or self.P == self.Q:
+                    self.Q = random.randint(1,500)
+                print("Q value is : ",self.Q)
+                gcdValue = math.gcd(self.P,self.Q)
+            print("All Condition Satisfied")
+            self.N = self.P * self.Q
+            self.Lambda = (self.P-1)*(self.Q-1)
+            print(" N Value : ",self.N)
+            print(" Lambda Value : ",self.Lambda)
+            Ans = 1
+            while Ans == 1:
+                self.G = random.randint(self.N,self.N**2)
+                print(" Generator G : ",self.G)
+                Ans = self.modInverse(self.LFunction((self.G**self.Lambda)%(self.N**2)),self.N)
+            self.U = Ans
+            print(" U Value : ",self.U)
 
 
     def Encryption(self,Value):
@@ -71,5 +72,5 @@ class PaillerCryptoSystem(object):
         return True
     def Sum(self,Value1,Value2):
         ans = (Value1*Value2) % (self.N**2)
-        ans = self.Decryption(ans)
+
         return ans

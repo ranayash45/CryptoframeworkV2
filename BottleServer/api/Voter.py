@@ -31,16 +31,16 @@ def GiveVOte():
     response.headers['Cache-Control']='no-cache'
     try:
         data = request.json
-        vote = data['vote']
-        voterid = bytes(data['vote'],'utf-8')
+        vote = bytes(str(data['vote']),'utf-8')
+        voterid = data['voterid']
         key = bytes("5675",'utf-8')
         my_hmac = hmac.new(vote,key)
 
         my_digest = data['digest_value']
-        new_digest = my_hmac.digest()
+        new_digest = my_hmac.hexdigest()
         if my_digest == new_digest :
             objVote = VoteModel()
-            objVote.GiveVote(vote,voterid)
+            objVote.GiveVote(data['vote'],voterid)
     except Exception as e:
         print(e)
         print("")

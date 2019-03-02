@@ -13,3 +13,8 @@ class CandidatteModel(object):
         records = self.__db.QueryAll("Select * from CandidateTbl")
 
         return records
+
+    def GetPartyList(self):
+        records = []
+        records = self.__db.QueryAll("Select PartyName from CandidateTbl")
+        return records
