@@ -32,11 +32,36 @@ class Dashboard(BoxLayout):
         P = PublicKey()
         P.GetKey(self.successFunction,self.failFunction)
 
+    def Show_Login_Panel(self):
+        L = LoginScreen()
+
+        L.open()
+
 
 
     def Show_Add_Vote(self):
         self.clear_widgets()
         self.add_widget(AddVote())
+
+class LoginScreen(ModalView):
+
+    txtusername = ObjectProperty()
+    txtpassword = ObjectProperty()
+    def __init__(self,**kwargs):
+        super(LoginScreen, self).__init__(**kwargs)
+
+    def Login(self):
+        if (self.txtusername.text != "" and self.txtpassword.text != ""):
+            username = self.txtusername.text
+            password = self.txtpassword.text
+            if (username == "admin" and password == "admin"):
+                print("Login Success")
+                self.dismiss()
+
+
+class AdminPanel(BoxLayout):
+    def __init__(self,**kwargs):
+        super(AdminPanel, self).__init__(**kwargs)
 
 class CryptoApp(App):
     pass
@@ -63,6 +88,7 @@ class AddVote(BoxLayout):
     def Show_Dashboard(self):
         self.clear_widgets()
         self.add_widget(Dashboard())
+        
 
     def SuccessAuthentication(self,response,result: dict):
         if 'error' in result:

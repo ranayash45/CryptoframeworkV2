@@ -39,6 +39,8 @@ BoxLayout:
 
 <Dashboard>:
     orientation:"vertical"
+    Image:
+        source:"./Images/votebutton.png"
     Label:
         text:"Voting Booth"
         font_name:OpenSansBold
@@ -51,16 +53,99 @@ BoxLayout:
     BoxLayout:
         size_hint_y:"0.25"
         orientation:"horizontal"
-        Label:
-            size_hint_x:"0.75"
-        Button:
-            size_hint_x:"0.25"
-            size_hint_y:None
-            height:"40dp"
-            padding:(5,5)
-            text:"Add Vote"
-            on_press:root.Show_Add_Vote()
+        canvas.before:
+            Rectangle:
+                source:"./Images/Vote3.png"
+                size:(300,200)
+                pos:(-1,-1)
 
+        BoxLayout:
+            size_hint_x:0.70
+        BoxLayout:
+            orientation:"vertical"
+            size_hint_x:"0.30"
+            spacing:5
+
+            Button:
+                size_hint_y:None
+                height:"40dp"
+                padding:(5,5)
+                text:"Admin Panel"
+                on_press:root.Show_Login_Panel()
+
+            Button:
+                size_hint_y:None
+                height:"40dp"
+                padding:(5,5)
+                text:"Add Vote"
+                on_press:root.Show_Add_Vote()
+
+<LoginScreen>:
+    txtusername:txtusername
+    txtpassword:txtpassword
+    btnLogin:btnLogin
+    size_hint_x:None
+    size_hint_y:None
+    height:"400dp"
+    width:"300dp"
+    canvas.before:
+        Color:
+            rgba:[0,0,0,0]
+        Rectangle:
+            size:self.size
+            pos:self.pos
+    BoxLayout:
+        orientation:"vertical"
+        spacing:5
+        padding:"10dp"
+        canvas.before:
+            Color:
+                rgba:[1,1,1,1]
+            RoundedRectangle:
+                radius:[30,30,30,30]
+                pos:self.pos
+                size:self.size
+        Label:
+            canvas.before:
+                Color:
+                    rgba:[0.98,0.98,0.98,1]
+                RoundedRectangle:
+                    radius:[30,]
+                    pos:self.pos
+                    size:self.size
+            border:
+            text:"Login"
+            font_size:"40dp"
+            size_hint_y:None
+            height:"50dp"
+        Label:
+            text:"Username"
+            font_size:"15dp"
+            height:"20dp"
+            size_hint_y:None
+        TextInput:
+            height:"30dp"
+            size_hint_y:None
+            id:txtusername
+        Label:
+            text:"Password"
+            font_size:"15dp"
+            size_hint_y:None
+            height:"20dp"
+        TextInput:
+            height:"30dp"
+            password:True
+            size_hint_y:None
+            id:txtpassword
+        Button:
+            id:btnLogin
+            text:"Login"
+            height:"30dp"
+            size_hint_x:None
+            size_hint_y:None
+            on_press:root.Login()
+        Label:
+            text:""
 <AddVote>:
     orientation:"vertical"
     description_output:description_output

@@ -28,6 +28,7 @@ def GetPublicKey():
 from api import Candidate
 from api import Voter
 from api import Result
+from api import Admin
 app = application = bottle.default_app()
 if __name__ == '__main__':
     bottle.run(host='localhost',port=80)
