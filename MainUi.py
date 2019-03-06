@@ -1,7 +1,8 @@
 import hashlib
 import hmac
 import json
-
+import threading
+import time
 from kivy.app import App
 from kivy.properties import ObjectProperty, ListProperty
 from kivy.uix.boxlayout import BoxLayout
@@ -67,6 +68,15 @@ class CryptoApp(App):
     pass
 
 
+class MainContainer(BoxLayout):
+    def __init__(self,**kwargs):
+        super(MainContainer, self).__init__(**kwargs)
+        self.clear_widgets()
+        self.add_widget(MySplashScreen())
+
+    def MoveToScreen(self,Screen):
+        self.clear_widgets()
+        self.add_widget(Screen)
 
 class AddVote(BoxLayout):
     adhar_no = ObjectProperty()
@@ -198,7 +208,18 @@ class CandidateOption(SelectableView,BoxLayout):
         self.selected_color=[0,1,1,1]
 
 
+class MySplashScreen(BoxLayout):
+    progressbar = ObjectProperty()
 
+    def __init__(self,**kwargs):
+        super(MySplashScreen, self).__init__(**kwargs)
+        splash  = threading.Thread(target=self.timetocount).start()
+    def timetocount(self):
+        while self.progressbar.value != 100:
+            time.sleep(0.2)
+            print(self.progressbar.value)
+            self.progressbar.value += 2
+        self.parent.MoveToScreen(Dashboard())
 
 if __name__ == "__main__":
     P = CryptoApp()

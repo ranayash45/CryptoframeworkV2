@@ -15,6 +15,10 @@ class AdminModel(object):
         result = self.con.Query("select * from AdminTbl where username = '{}' and password = '{}'".format(username,password))
         return result
 
+    def AddAdmin(self,username,password):
+        result = self.con.Execute("Insert into AdminTbl values(null,{},{})".format(username,password))
+        return result
+
     def AddCandidate(self,CandidateName,PartyName):
         pass
     def UpdateCandidate(self,CandidateId,CandidateName,PartyName):

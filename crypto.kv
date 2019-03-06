@@ -4,7 +4,10 @@
 #: import main MainUi
 #:set OpenSansBold "./Fonts/OpenSans-Bold"
 #:set OpenSansItalic "./Fonts/OpenSans-Italic"
-BoxLayout:
+MainContainer:
+
+
+<MainContainer>:
     padding:"15dp"
     canvas.before:
 
@@ -14,16 +17,19 @@ BoxLayout:
             size:self.size
             pos:self.pos
 
-    Dashboard:
-        padding:"15dp"
 
-        canvas.before:
-            Color:
-                rgb:[1,1,1]
-            Rectangle:
-                size:self.size
-                pos:self.pos
-
+<NewAppSetup>:
+    Label:
+        text:"Welcome to Our Application"
+    BoxLayout:
+        Label:
+            text:"Please SignUp for admin"
+        TextInput:
+            id:txtusername
+        TextInput:
+            id:txtpassword
+        Button:
+            text:"Next"
 
 <Widget>:
     font_name:OpenSansNormal
@@ -36,8 +42,28 @@ BoxLayout:
     background_color:(0.95,0.95,0.95,1)
     background_normal:"white"
 
-
+<MySplashScreen>:
+    progressbar:progressbar
+    orientation:"vertical"
+    canvas.before:
+        Color:
+            rgb:[1,1,1,1]
+        Rectangle:
+            size:self.size
+            pos:self.pos
+    Image:
+        source:"./Images/votebutton.png"
+    ProgressBar:
+        id:progressbar
 <Dashboard>:
+    padding:"15dp"
+
+    canvas.before:
+        Color:
+            rgb:[1,1,1]
+        Rectangle:
+            size:self.size
+            pos:self.pos
     orientation:"vertical"
     Image:
         source:"./Images/votebutton.png"
