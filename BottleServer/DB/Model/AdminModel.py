@@ -30,3 +30,9 @@ class AdminModel(object):
     def AddVoter(self,AdharCard,VoterName,FingurePrintData):
         pass
 
+    def GetTotalUsers(self):
+        result =  self.con.Query("select count(*) from AdminTbl")
+        count = 0
+        if result != None:
+            count = result[0]
+        return count

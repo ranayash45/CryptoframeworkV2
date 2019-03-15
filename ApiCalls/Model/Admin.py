@@ -12,3 +12,6 @@ class Admin(object):
         data = {'username':username,'password':password}
         data = json.dumps(data)
         self.api.apiCallWithData(self.apiName+'/AddNew',data,successfunction,errorfunction,failfunction)
+
+    def CheckAdmin(self,successfunction,errorfunction):
+        self.api.apiCallWithResult(self.apiName+'/Check',successfunction=successfunction,errorfunction=errorfunction)

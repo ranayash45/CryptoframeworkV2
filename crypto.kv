@@ -30,6 +30,65 @@ MainContainer:
             id:txtpassword
         Button:
             text:"Next"
+<AddAdminPanel>:
+    size_hint_y:None
+    size_hint_x:None
+    txtusername:txtusername
+    txtpassword:txtpassword
+    txtconfirmpassword:txtconfirmpassword
+    height:400
+    width:300
+    BoxLayout:
+        orientation:"vertical"
+        padding:10
+
+        spacing:10
+        canvas.before:
+            Color:
+                rgba:(1,1,1,1)
+            Rectangle:
+                pos:self.pos
+                size:self.size
+        Label:
+            height:50
+            text:"Create Admin"
+            font_size:35
+        Label:
+            size_hint_y:None
+            height:30
+            text:"Username "
+        TextInput:
+            size_hint_y:None
+            height:30
+            id:txtusername
+        Label:
+            size_hint_y:None
+            height:30
+            text:"Password"
+        TextInput:
+            size_hint_y:None
+            height:30
+            password:True
+            id:txtpassword
+
+        Label:
+            size_hint_y:None
+            height:30
+            text:"Confirm Password"
+        TextInput:
+            size_hint_y:None
+            height:30
+            password:True
+            id:txtconfirmpassword
+
+        Button:
+            text:"Save"
+            height:30
+            size_hint_x:None
+            size_hint_y:None
+            on_press:root.Save()
+        Label:
+            text:""
 
 <Widget>:
     font_name:OpenSansNormal

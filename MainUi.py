@@ -1,17 +1,23 @@
 import hashlib
 import hmac
 import json
+import sys
 import threading
 import time
 from kivy.app import App
+from kivy.graphics.context_instructions import Color
+from kivy.graphics.vertex_instructions import Rectangle
 from kivy.properties import ObjectProperty, ListProperty
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.image import Image
+from kivy.uix.label import Label
 from kivy.uix.modalview import ModalView
 from kivy.uix.selectableview import SelectableView
 
 from ApiCalls.Model import Candidate, Voter
+from ApiCalls.Model.Admin import Admin
 from ApiCalls.Model.PublicKey import PublicKey
+from BottleServer.DB.Model.AdminModel import AdminModel
 from CryptoFramework.ShortPailler import PaillerCryptoSystem
 
 
@@ -208,18 +214,84 @@ class CandidateOption(SelectableView,BoxLayout):
         self.selected_color=[0,1,1,1]
 
 
+class AddAdminPanel(ModalView):
+
+    txtusername = ObjectProperty()
+    txtpassword = ObjectProperty()
+    txtconfirmpassword = ObjectProperty()
+
+    def ShowMessage(self,message):
+        MessageBox = ModalView()
+        MessageBox.size_hint = (None, None)
+        MessageBox.background_color = (1, 1, 1, 0.5)
+        MessageBox.height = "100"
+        MessageBox.width = "400"
+        lblMessage = Label()
+        lblMessage.text = message
+        MessageBox.add_widget(lblMessage)
+        MessageBox.open()
+
+    def __init__(self,**kwargs):
+        super(AddAdminPanel, self).__init__(**kwargs)
+
+    def Save(self):
+        if self.txtusername.text.strip() == "":
+            self.ShowMessage('Please enter Username ')
+            return
+        if self.txtpassword.text.strip() == "":
+            self.ShowMessage('Please Enter Password')
+            return
+        if self.txtconfirmpassword.text.strip() == "":
+            self.ShowMessage('Please Enter ConfirmPassword')
+            return
+        if self.txtpassword.text != self.txtconfirmpassword.text :
+            self.ShowMessage('Password Not Matched')
+            return
 class MySplashScreen(BoxLayout):
     progressbar = ObjectProperty()
+    ServiceCalled = False
+    def ServerFound(self,request,result):
+        self.ServiceCalled = False
+        resultobj = json.loads(result)
+        print(resultobj)
 
+        if resultobj["message"] == True:
+
+            self.parent.MoveToScreen(Dashboard())
+            adminCreatorObj = AddAdminPanel()
+            adminCreatorObj.open()
+        else:
+            adminCreatorObj = AddAdminPanel()
+            adminCreatorObj.open()
+
+    def ServerNotFound(self,request,result):
+        self.ServiceCalled = False
+        MessageBox = ModalView()
+        MessageBox.size_hint = (None,None)
+        MessageBox.background_color = (1,1,1,0.5)
+        MessageBox.canvas.add(Color(1,1,1,1))
+        MessageBox.canvas.add(Rectangle(size=MessageBox.size,pos=MessageBox.pos))
+        MessageBox.height = "100"
+        MessageBox.width = "400"
+        lblMessage = Label()
+        lblMessage.text = "Please Check Your Internet Connection"
+        MessageBox.add_widget(lblMessage)
+        MessageBox.on_dismiss = self.CloseMessageBox
+        MessageBox.open()
+
+    def CloseMessageBox(self):
+        sys.exit(1)
     def __init__(self,**kwargs):
         super(MySplashScreen, self).__init__(**kwargs)
         splash  = threading.Thread(target=self.timetocount).start()
     def timetocount(self):
-        while self.progressbar.value != 100:
+        self.ServiceCalled = True
+        admObj = Admin()
+        admObj.CheckAdmin(self.ServerFound,self.ServerNotFound)
+        while self.ServiceCalled == True:
             time.sleep(0.2)
             print(self.progressbar.value)
-            self.progressbar.value += 2
-        self.parent.MoveToScreen(Dashboard())
+            self.progressbar.value = (self.progressbar.value + 10)% 100
 
 if __name__ == "__main__":
     P = CryptoApp()

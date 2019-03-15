@@ -45,3 +45,14 @@ def AddAdmin():
     except:
         detail["message"] = False
     return json.dumps(detail)
+
+@get("/Admin/Check")
+def CheckAdmin():
+    admObj = AdminModel()
+    count = admObj.GetTotalUsers()
+    detail = {}
+    if count == 0:
+        detail["message"] = True
+    else:
+        detail["message"] = False
+    return json.dumps(detail)
